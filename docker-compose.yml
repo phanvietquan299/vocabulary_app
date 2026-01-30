@@ -1,0 +1,36 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb_vocab
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build: ./back-end 
+    container_name: fastapi_backend
+    env_file:
+      - ./back-end/.env 
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./vocabulary_app:/code
+    depends_on:
+      - mongodb
+
+  frontend:
+    build: ./front-end 
+    container_name: react_frontend
+    env_file:
+      - ./front-end/.env
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./front-end:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
