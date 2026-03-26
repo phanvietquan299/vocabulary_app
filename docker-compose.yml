@@ -1,27 +1,39 @@
 services:
-  mongodb:
-    image: mongo:latest
-    container_name: mongodb_vocab
+  db:
+    image: mysql:8
+    container_name: vocab_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: vocab_app
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
     ports:
-      - "27017:27017"
+      - "3306:3306"
     volumes:
-      - mongo_data:/data/db
+      - db_data:/var/lib/mysql
+      - ./back-end/init:/docker-entrypoint-initdb.d
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
 
   backend:
-    build: ./back-end 
+    build: ./back-end
     container_name: fastapi_backend
     env_file:
-      - ./back-end/.env 
+      - ./back-end/.env
+    working_dir: /app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     ports:
       - "8000:8000"
     volumes:
-      - ./vocabulary_app:/code
+      - ./back-end:/app
     depends_on:
-      - mongodb
+      - db
 
   frontend:
-    build: ./front-end 
-    container_name: react_frontend
+    build: ./front-end
+    container_name: react_frontend_DP
     env_file:
       - ./front-end/.env
     ports:
@@ -33,4 +45,4 @@ services:
       - backend
 
 volumes:
-  mongo_data:
+  db_data:

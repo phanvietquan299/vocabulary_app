@@ -1,0 +1,35 @@
+﻿SET NAMES utf8mb4;
+USE vocab_app;
+
+INSERT INTO vocabularies (word, meaning, pronunciation, topic) VALUES
+('cat', 'con mèo', '/kæt/', 'animal'),
+('dog', 'con chó', '/dɔːg/', 'animal'),
+('travel', 'du lịch', '/ˈtræv.əl/', 'travel'),
+('office', 'văn phòng', '/ˈɔː.fɪs/', 'work'),
+
+('teacher', 'giáo viên', '/ˈtiː.tʃər/', 'school'),
+('student', 'học sinh', '/ˈstuː.dənt/', 'school'),
+('classroom', 'lớp học', '/ˈklæs.ruːm/', 'school'),
+('homework', 'bài tập về nhà', '/ˈhoʊm.wɝːk/', 'school'),
+('lesson', 'bài học', '/ˈles.ən/', 'school'),
+('notebook', 'quyển vở', '/ˈnoʊt.bʊk/', 'school'),
+('library', 'thư viện', '/ˈlaɪ.brer.i/', 'school'),
+('exam', 'kỳ thi', '/ɪɡˈzæm/', 'school'),
+
+('rice', 'cơm', '/raɪs/', 'food'),
+('bread', 'bánh mì', '/bred/', 'food'),
+('noodles', 'mì', '/ˈnuː.dəlz/', 'food'),
+('soup', 'súp', '/suːp/', 'food'),
+('salad', 'sa lát', '/ˈsæl.əd/', 'food'),
+('juice', 'nước ép', '/dʒuːs/', 'food'),
+('breakfast', 'bữa sáng', '/ˈbrek.fəst/', 'food'),
+('restaurant', 'nhà hàng', '/ˈres.tər.ɑːnt/', 'food'),
+
+('father', 'bố', '/ˈfɑː.ðər/', 'family'),
+('mother', 'mẹ', '/ˈmʌð.ər/', 'family'),
+('brother', 'anh em trai', '/ˈbrʌð.ər/', 'family'),
+('sister', 'chị em gái', '/ˈsɪs.tər/', 'family'),
+('grandfather', 'ông', '/ˈɡræn.fɑː.ðər/', 'family'),
+('grandmother', 'bà', '/ˈɡræn.mʌð.ər/', 'family'),
+('uncle', 'chú cậu', '/ˈʌŋ.kəl/', 'family'),
+('aunt', 'cô dì', '/ænt/', 'family');
