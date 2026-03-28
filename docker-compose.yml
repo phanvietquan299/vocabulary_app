@@ -1,21 +1,22 @@
 services:
   db:
-    image: mysql:8
-    container_name: vocab_mysql
+    image: postgres:16
+    container_name: vocab_postgres
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: vocab_app
-      MYSQL_CHARSET: utf8mb4
-      MYSQL_COLLATION: utf8mb4_unicode_ci
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: vocab_app
     ports:
-      - "3306:3306"
+      - "5433:5432"
     volumes:
-      - db_data:/var/lib/mysql
-      - ./back-end/init:/docker-entrypoint-initdb.d
-    command:
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
+      - db_data:/var/lib/postgresql/data
+      - ./back-end/app/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d vocab_app"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   backend:
     build: ./back-end
@@ -29,7 +30,8 @@ services:
     volumes:
       - ./back-end:/app
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   frontend:
     build: ./front-end

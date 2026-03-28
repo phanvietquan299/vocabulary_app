@@ -1,12 +1,8 @@
-﻿SET NAMES utf8mb4;
-USE vocab_app;
-
 INSERT INTO vocabularies (word, meaning, pronunciation, topic) VALUES
 ('cat', 'con mèo', '/kæt/', 'animal'),
 ('dog', 'con chó', '/dɔːg/', 'animal'),
 ('travel', 'du lịch', '/ˈtræv.əl/', 'travel'),
 ('office', 'văn phòng', '/ˈɔː.fɪs/', 'work'),
-
 ('teacher', 'giáo viên', '/ˈtiː.tʃər/', 'school'),
 ('student', 'học sinh', '/ˈstuː.dənt/', 'school'),
 ('classroom', 'lớp học', '/ˈklæs.ruːm/', 'school'),
@@ -15,7 +11,6 @@ INSERT INTO vocabularies (word, meaning, pronunciation, topic) VALUES
 ('notebook', 'quyển vở', '/ˈnoʊt.bʊk/', 'school'),
 ('library', 'thư viện', '/ˈlaɪ.brer.i/', 'school'),
 ('exam', 'kỳ thi', '/ɪɡˈzæm/', 'school'),
-
 ('rice', 'cơm', '/raɪs/', 'food'),
 ('bread', 'bánh mì', '/bred/', 'food'),
 ('noodles', 'mì', '/ˈnuː.dəlz/', 'food'),
@@ -24,7 +19,6 @@ INSERT INTO vocabularies (word, meaning, pronunciation, topic) VALUES
 ('juice', 'nước ép', '/dʒuːs/', 'food'),
 ('breakfast', 'bữa sáng', '/ˈbrek.fəst/', 'food'),
 ('restaurant', 'nhà hàng', '/ˈres.tər.ɑːnt/', 'food'),
-
 ('father', 'bố', '/ˈfɑː.ðər/', 'family'),
 ('mother', 'mẹ', '/ˈmʌð.ər/', 'family'),
 ('brother', 'anh em trai', '/ˈbrʌð.ər/', 'family'),
