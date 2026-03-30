@@ -25,7 +25,6 @@ class LearningProgressManager:
     def get_words(self, session_id: str):
         return set(self.progress_by_session.get(session_id, set()))
 
-
     def reset_progress(self, session_id: str):
         if session_id in self.progress_by_session:
             del self.progress_by_session[session_id]

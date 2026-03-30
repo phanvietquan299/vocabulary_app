@@ -2,10 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.database import check_database_connection
-from app.patterns.factory.factory_provider import FactoryProvider
+from app.routes.vocabulary_routes import router as vocabulary_router
 
 app = FastAPI()
-factory_provider = FactoryProvider()
 
 app.add_middleware(
     CORSMiddleware,
@@ -24,14 +23,6 @@ def startup_event():
 async def root():
     return {"message": "Backend is running with PostgreSQL!"}
 
-@app.get("/vocabulary/")
-async def get_vocabulary_by_topic(topic: str):
-    try:
-        factory = factory_provider.get_factory(topic)
-        vocabulary_list = factory.get_vocabulary_topic()
-        return {"vocabulary": [vocab.__dict__ for vocab in vocabulary_list]}
-    except ValueError as e:
-        return {"error": str(e)}
-    pass
 
+app.include_router(vocabulary_router)
 

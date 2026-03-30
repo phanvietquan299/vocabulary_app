@@ -19,9 +19,11 @@ def test_learning_progress_separates_multiple_sessions():
 
     manager.mark_learned(session_id_1, "cat")
     manager.mark_learned(session_id_1, "dog")
+    manager.mark_learned(session_id_1, "cat") # Duplicate
 
     manager.mark_learned(session_id_2, "plane")
     manager.mark_learned(session_id_2, "train")
+    manager.mark_learned(session_id_2, "train") # Duplicate
 
     assert manager.count(session_id_1) == 2
     assert manager.count(session_id_2) == 2
