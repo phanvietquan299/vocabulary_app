@@ -4,7 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import check_database_connection
 from app.core.websocket import router as websocket_router
 from app.routes.vocabulary_routes import router as vocabulary_router
-from app.routes.learned_routes import router as learned_router
+from app.routes.learned_list_routes import router as learned_router
+from app.routes.exam_routes import router as exam_router
 
 app = FastAPI()
 
@@ -29,3 +30,4 @@ async def root():
 app.include_router(vocabulary_router)
 app.include_router(learned_router)
 app.include_router(websocket_router)
+app.include_router(exam_router)

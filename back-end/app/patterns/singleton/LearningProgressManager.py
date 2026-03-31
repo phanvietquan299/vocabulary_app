@@ -34,6 +34,7 @@ class LearningProgressManager:
         return {"message": f"Word '{word} marked as learned for session {session_id}"}
 
 
+
     def count(self, session_id: str):
         return len(self.progress_by_session.get(session_id, set()))
     

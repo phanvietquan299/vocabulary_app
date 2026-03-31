@@ -1,7 +1,8 @@
 from sqlalchemy import Column, Integer, String
 from app.core.database import Base
 
-
+# This class creates the VocabularyModel table in the database and defines its structure.
+# Provides ORM mapping for the VocabularyModel
 class VocabularyModel(Base):
     __tablename__ = "vocabularies"
 
