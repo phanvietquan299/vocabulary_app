@@ -1,18 +1,43 @@
-from app.patterns.singleton.LearningProgressManager import LearningProgressManager
+import datetime
 
-async def add_learned_word(session_id: str, word: str):
+from app.patterns.singleton.LearningProgressManager import LearningProgressManager
+from app.patterns.factory.factory_provider import FactoryProvider
+
+async def add_learned_word(session_id: str, word_id: str):
     manager = LearningProgressManager()
-    return await manager.mark_learned(session_id, word)
+    try:
+        word = FactoryProvider().get_vocabulary_by_id(word_id)
+    except Exception as e:
+        raise RuntimeError("Failed to load word data.") from e
+
+    if not word:
+        raise ValueError(f"Word with id '{word_id}' not found.")
+
+    word.learn_at = datetime.datetime.now()
+
+    try:
+        return await manager.mark_learned(session_id, word)
+    except Exception as e:
+        raise RuntimeError("Failed to save learned word progress.") from e
 
 async def reset_learned_progress(session_id: str):
     manager = LearningProgressManager()
-    manager.reset_progress(session_id)
-    return {"message": f"Learning progress reset for session '{session_id}'."}
+    try:
+        manager.reset_progress(session_id)
+        return {"message": f"Learning progress reset for session '{session_id}'."}
+    except Exception as e:
+        raise RuntimeError("Failed to reset learning progress.") from e
 
 async def get_learned_words(session_id: str):
     manager = LearningProgressManager()
-    words = manager.get_words(session_id)
-    return {"session_id": session_id, "learned_words": list(words)}
+    try:
+        words = manager.get_words(session_id)
+        return {
+            "session_id": session_id,
+            "learned_words": [word.to_dict() for word in words],
+        }
+    except Exception as e:
+        raise RuntimeError("Failed to fetch learned words.") from e
 
 async def check_all_learned():
     instance = LearningProgressManager()

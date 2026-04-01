@@ -5,6 +5,7 @@ session_id sẽ được tạo ra khi người dùng bắt đầu học và sẽ
 session_id sẽ được tạo ngẫu nhiên ở front-end để đảm bảo tính duy nhất và bảo mật
 '''
 from app.patterns.observer.ObserverLearnedProcess import ObserverLearnedProcess
+from app.models.vocabulary import Vocabulary
 
 class LearningProgressManager:
     _instance = None
@@ -19,19 +20,21 @@ class LearningProgressManager:
     def attach_observer(self, observer):
         self.observers.append(observer)
 
-    async def notify_observers(self, session_id: str, word: str):
+    async def notify_observers(self, session_id: str):
         learned_word = self.progress_by_session.get(session_id, set())
-        learned_word.add(word)
-        for obs in self.observers:
-            await obs.update(session_id, learned_word)
+        learned_words = [word.to_dict() for word in learned_word]
 
-    async def mark_learned(self, session_id: str, word: str):
+        for obs in self.observers:
+            await obs.update(session_id, learned_words)
+
+    # Đánh dấu (thêm từ đã học vào tiến trình của session_id)
+    async def mark_learned(self, session_id: str, word: Vocabulary):
         if session_id not in self.progress_by_session:
             self.progress_by_session[session_id] = set()
 
         self.progress_by_session[session_id].add(word)
-        await self.notify_observers(session_id, word)
-        return {"message": f"Word '{word} marked as learned for session {session_id}"}
+        await self.notify_observers(session_id)
+        return f"Đã đánh dấu từ '{word.to_dict().get('word', 'Unknown')}' là đã học cho session_id '{session_id}'"
 
 
 
@@ -44,3 +47,6 @@ class LearningProgressManager:
     def reset_progress(self, session_id: str):
         if session_id in self.progress_by_session:
             del self.progress_by_session[session_id]
+
+    def get_learned_progress(self, session_id: str):
+        return self.progress_by_session.get(session_id, set())
