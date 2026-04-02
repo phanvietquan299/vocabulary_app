@@ -12,4 +12,14 @@ class SchoolFactory(VocabularyFactory):
     
     def get_vocabulary_topic(self):
         words = self.db.query(VocabularyModel).filter(VocabularyModel.topic == Topic.SCHOOL.value).all()
-        return [Vocabulary(word.word, word.meaning, Topic.SCHOOL, word.pronunciation , word.image_url) for word in words]
+        return [
+            Vocabulary(
+                id=word.id,
+                word=word.word,
+                meaning=word.meaning,
+                topic=Topic.SCHOOL,
+                pronunciation=word.pronunciation,
+                image_url=word.image_url,
+            )
+            for word in words
+        ]

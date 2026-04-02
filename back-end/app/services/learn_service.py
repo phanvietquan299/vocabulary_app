@@ -19,6 +19,16 @@ async def add_learned_word(session_id: str, word_id: str):
         return await manager.mark_learned(session_id, word)
     except Exception as e:
         raise RuntimeError("Failed to save learned word progress.") from e
+    
+async def remove_learned_word(session_id: str, word_id: str):
+    manager = LearningProgressManager()
+    try:
+        await manager.remove_learned(session_id, word_id)
+        return {"message": f"Word with id '{word_id}' removed from learned progress for session '{session_id}'."}
+    except ValueError:
+        raise
+    except Exception as e:
+        raise RuntimeError("Failed to remove learned word progress.") from e
 
 async def reset_learned_progress(session_id: str):
     manager = LearningProgressManager()
@@ -38,6 +48,19 @@ async def get_learned_words(session_id: str):
         }
     except Exception as e:
         raise RuntimeError("Failed to fetch learned words.") from e
+    
+async def get_learned_by_topic(session_id: str, topic: str):
+    manager = LearningProgressManager()
+    try:
+        all_learned = manager.get_words(session_id)
+        learned_by_topic = [word.to_dict() for word in all_learned if word.topic == topic]
+        return {
+            "session_id": session_id,
+            "topic": topic,
+            "learned_words": learned_by_topic,
+        }
+    except Exception as e:
+        raise RuntimeError("Failed to fetch learned words by topic.") from e
 
 async def check_all_learned():
     instance = LearningProgressManager()

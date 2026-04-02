@@ -35,6 +35,23 @@ class LearningProgressManager:
         self.progress_by_session[session_id].add(word)
         await self.notify_observers(session_id)
         return f"Đã đánh dấu từ '{word.to_dict().get('word', 'Unknown')}' là đã học cho session_id '{session_id}'"
+    
+    async def remove_learned(self, session_id: str, word_id: str): 
+        if session_id in self.progress_by_session:
+            words = self.progress_by_session[session_id]
+            word_to_remove = None
+            for word in words:
+                if str(word.id) == str(word_id):
+                    word_to_remove = word
+                    break
+            if word_to_remove:
+                words.remove(word_to_remove)
+                await self.notify_observers(session_id)
+                return f"Đã xóa từ '{word_to_remove.to_dict().get('word', 'Unknown')}' khỏi tiến trình đã học cho session_id '{session_id}'"
+            else:
+                raise ValueError(f"Word with id '{word_id}' not found in learned progress for session '{session_id}'.")
+        else:
+            raise ValueError(f"No learning progress found for session '{session_id}'.")
 
 
 

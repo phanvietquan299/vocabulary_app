@@ -1,0 +1,226 @@
+.home-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(255, 214, 153, 0.45), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(116, 185, 255, 0.28), transparent 24%),
+    linear-gradient(180deg, #fffaf2 0%, #f4f8ff 100%);
+}
+
+.home-shell {
+  max-width: 1280px;
+}
+
+.home-header {
+  margin-bottom: 1.75rem;
+}
+
+.home-eyebrow {
+  color: #b4691f;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.home-title {
+  color: #14213d;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  max-width: 12ch;
+}
+
+.home-subtitle {
+  color: #52627a;
+  font-size: 1rem;
+  max-width: 60ch;
+}
+
+.home-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: minmax(0, 10fr) minmax(280px, 2fr);
+  align-items: start;
+}
+
+.dashboard-feedback {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(20, 33, 61, 0.08);
+  border-radius: 18px;
+  color: #385071;
+  margin-bottom: 1rem;
+  padding: 0.9rem 1rem;
+}
+
+.dashboard-feedback-error {
+  background: rgba(255, 241, 242, 0.95);
+  border-color: rgba(190, 24, 93, 0.16);
+  color: #9f1239;
+}
+
+.topics-panel,
+.progress-panel {
+  min-width: 0;
+}
+
+.topic-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.topic-card {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(20, 33, 61, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 18px 45px rgba(20, 33, 61, 0.08);
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 1.25rem 1.35rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.topic-card:hover {
+  box-shadow: 0 24px 50px rgba(20, 33, 61, 0.12);
+  transform: translateY(-2px);
+}
+
+.topic-kicker {
+  color: #b4691f;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.topic-title {
+  color: #0d1b2a;
+  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+  font-weight: 750;
+}
+
+.topic-subtitle {
+  color: #5e6c84;
+  font-size: 0.98rem;
+}
+
+.topic-meta {
+  color: #1d3557;
+  display: grid;
+  gap: 0.4rem;
+  justify-items: end;
+  text-align: right;
+}
+
+.topic-meta span {
+  background: #eef4ff;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 0.45rem 0.8rem;
+}
+
+.topic-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.review-card {
+  background: linear-gradient(135deg, #14213d 0%, #1d3557 100%);
+}
+
+.review-card .topic-kicker,
+.review-card .topic-title,
+.review-card .topic-subtitle,
+.review-card .topic-meta {
+  color: #f8fbff;
+}
+
+.review-card .topic-meta span {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.progress-sticky {
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(20, 33, 61, 0.08);
+  border-radius: 28px;
+  box-shadow: 0 20px 50px rgba(20, 33, 61, 0.1);
+  padding: 1.25rem;
+  position: sticky;
+  top: 1.25rem;
+}
+
+.progress-panel-header {
+  margin-bottom: 1rem;
+}
+
+.progress-kicker {
+  color: #6c7a92;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.progress-title {
+  color: #14213d;
+  font-size: 1.4rem;
+  font-weight: 750;
+}
+
+.progress-stack {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.progress-card {
+  background: #f8fbff;
+  border-radius: 20px;
+  padding: 1rem;
+}
+
+.progress-label {
+  color: #41536f;
+  font-weight: 600;
+}
+
+.progress-value {
+  color: #0d1b2a;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.bar-shell {
+  background: #e4ecf7;
+  border-radius: 999px;
+  height: 0.8rem;
+  overflow: hidden;
+}
+
+@media (max-width: 991.98px) {
+  .home-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-sticky {
+    position: static;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .topic-card {
+    grid-template-columns: 1fr;
+  }
+
+  .topic-meta {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .topic-actions {
+    justify-content: flex-start;
+  }
+}

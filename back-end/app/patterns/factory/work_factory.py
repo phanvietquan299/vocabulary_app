@@ -13,4 +13,14 @@ class WorkFactory(VocabularyFactory):
     
     def get_vocabulary_topic(self):
         words = self.db.query(VocabularyModel).filter(VocabularyModel.topic == Topic.WORK.value).all()
-        return [Vocabulary(word.word, word.meaning, Topic.WORK, word.pronunciation , word.image_url) for word in words]
+        return [
+            Vocabulary(
+                id=word.id,
+                word=word.word,
+                meaning=word.meaning,
+                topic=Topic.WORK,
+                pronunciation=word.pronunciation,
+                image_url=word.image_url,
+            )
+            for word in words
+        ]

@@ -12,5 +12,15 @@ class TravelFactory(VocabularyFactory):
     
     def get_vocabulary_topic(self):
         words = self.db.query(VocabularyModel).filter(VocabularyModel.topic == Topic.TRAVEL.value).all()
-        return [Vocabulary(word.word, word.meaning, Topic.TRAVEL, word.pronunciation , word.image_url) for word in words]
+        return [
+            Vocabulary(
+                id=word.id,
+                word=word.word,
+                meaning=word.meaning,
+                topic=Topic.TRAVEL,
+                pronunciation=word.pronunciation,
+                image_url=word.image_url,
+            )
+            for word in words
+        ]
         

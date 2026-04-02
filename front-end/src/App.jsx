@@ -1,34 +1,80 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import './App.css'
+import { Routes, Route } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import FirstPage from './pages/FirstPage'
+import HomePage from './pages/HomePage'
+import TopicWordsPage from './pages/TopicWordsPage'
+import TopicStudyPage from './pages/TopicStudyPage'
+
+import { USER_ID_STORAGE_KEY } from './utils/session'
+
+function createUserId() {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID()
+  }
+
+  return `user-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
+}
+
+function getUserId() {
+  const savedUserId = localStorage.getItem(USER_ID_STORAGE_KEY)
+
+  if (savedUserId) {
+    return savedUserId
+  }
+
+  return null;
+}
+
+function resetUserId() {
+  const newUserId = createUserId()
+  localStorage.setItem(USER_ID_STORAGE_KEY, newUserId)
+  return newUserId
+}
 
 function App() {
-  const [message, setMessage] = useState('Waiting for WebSocket messages...')
+  const [userId, setUserId] = useState(() => getUserId() ?? '')
+  const navigate = useNavigate()
 
-  useEffect(() => {
-    const socket = new WebSocket(`ws://${window.location.hostname}:8000/ws`)
+  function handleReset() {
+    const newUserId = resetUserId()
+    setUserId(newUserId)
+  }
 
-    socket.onmessage = (event) => {
-      setMessage(event.data)
-    }
+  function handleContinue() {
+    navigate('/home', {
+      state: { userId : userId }
+    })
+  }
 
-    socket.onerror = () => {
-      setMessage('Error connecting to WebSocket.')
-    }
-
-    socket.onclose = () => {
-      setMessage('WebSocket connection closed.')
-    }
-
-    return () => {
-      socket.close()
-    }
-  }, [])
+  function handleNew() {
+    
+    const newUserId = resetUserId()
+    setUserId(newUserId)
+    navigate('/home', {
+      state: { userId: newUserId }
+    })
+  }
 
   return (
-    <main>
-      <h1>WebSocket Viewer</h1>
-      <p>{message}</p>
-    </main>
+    // <FirstPage
+    //   userId={userId}
+    //   onContinue={handleContinue}
+    //   onReset={handleReset}
+    // />
+
+    <Routes>
+      <Route path="/" element={<FirstPage 
+              userId={userId} 
+              onContinue={handleContinue} 
+              onReset={handleReset} 
+              onNew={handleNew}/>} />
+      <Route path="/home" element={<HomePage />} />
+      <Route path="/topics/:topicId" element={<TopicWordsPage />} />
+      <Route path="/topics/:topicId/study" element={<TopicStudyPage />} />
+    </Routes>
   )
 }
 

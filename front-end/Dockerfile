@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY package*.json ./
 RUN npm install
-
 COPY . .
 
 # Expose port của Vite
