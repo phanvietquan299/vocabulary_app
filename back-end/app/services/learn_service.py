@@ -13,7 +13,7 @@ async def add_learned_word(session_id: str, word_id: str):
     if not word:
         raise ValueError(f"Word with id '{word_id}' not found.")
 
-    word.learn_at = datetime.datetime.now()
+    word.learn_at = datetime.datetime.now(datetime.timezone.utc)
 
     try:
         return await manager.mark_learned(session_id, word)

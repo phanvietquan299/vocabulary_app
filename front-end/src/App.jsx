@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import FirstPage from './pages/FirstPage'
 import HomePage from './pages/HomePage'
+import ReviewSessionPage from './pages/ReviewSessionPage'
 import TopicWordsPage from './pages/TopicWordsPage'
 import TopicStudyPage from './pages/TopicStudyPage'
 
@@ -72,6 +73,7 @@ function App() {
               onReset={handleReset} 
               onNew={handleNew}/>} />
       <Route path="/home" element={<HomePage />} />
+      <Route path="/review" element={<ReviewSessionPage />} />
       <Route path="/topics/:topicId" element={<TopicWordsPage />} />
       <Route path="/topics/:topicId/study" element={<TopicStudyPage />} />
     </Routes>

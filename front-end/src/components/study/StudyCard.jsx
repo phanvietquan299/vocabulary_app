@@ -10,6 +10,7 @@ export default function StudyCard({
   onToggleLearned,
   selectedOption,
   onSelectOption,
+  metaText = '',
 }) {
   return (
     <section className="study-card">
@@ -22,6 +23,8 @@ export default function StudyCard({
         />
         <span>{isSavingLearned ? 'Dang luu...' : 'Da hoc'}</span>
       </label>
+
+      {metaText ? <p className="study-meta-note mb-0">{metaText}</p> : null}
 
       {mode === 'flashcard' ? (
         <FlashcardMode examData={examData} fallbackWord={word} />

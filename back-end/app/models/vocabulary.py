@@ -31,6 +31,11 @@ class Vocabulary:
         return self.word == other.word and self.topic == other.topic
 
     def to_dict(self):
+        learn_at = self.learn_at
+
+        if learn_at and learn_at.tzinfo is None:
+            learn_at = learn_at.replace(tzinfo=datetime.timezone.utc)
+
         return {
             "id": self.id,
             "word": self.word,
@@ -38,5 +43,5 @@ class Vocabulary:
             "pronunciation": self.pronunciation,
             "image_url": self.image_url,
             "topic": self.topic.value,
-            "learn_at": self.learn_at.isoformat() if self.learn_at else None
+            "learn_at": learn_at.isoformat() if learn_at else None
         }

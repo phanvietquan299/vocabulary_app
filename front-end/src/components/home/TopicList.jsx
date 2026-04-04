@@ -21,6 +21,8 @@ export default function TopicList({ topics }) {
           subtitle="On tap cac the sap den han va giu nhip do ghi nho lau dai."
           badges={['SR', 'Ready']}
           review
+          primaryActionTo="/review"
+          primaryActionLabel="On tap"
         />
       </div>
     </div>

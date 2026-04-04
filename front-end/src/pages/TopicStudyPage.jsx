@@ -12,6 +12,7 @@ import {
   markWordAsLearned,
   removeWordAsLearned,
 } from '../data/topicService'
+import { formatRelativeLearnTime } from '../utils/relativeTime'
 import { getStoredUserId } from '../utils/session'
 import './TopicExperience.css'
 
@@ -45,7 +46,7 @@ function TopicStudyPageContent() {
         ])
         const learnedWordIds = new Set(
           learnedWords
-            .filter((word) => word.topic === topicId)
+            .filter((word) => String(word.topic) === String(topicId))
             .map((word) => word.id)
         )
 
@@ -83,12 +84,13 @@ function TopicStudyPageContent() {
   }, [topicId, sessionId])
 
   const currentWord = topic?.words?.[currentIndex]
+  const currentWordId = currentWord?.id ?? null
 
   useEffect(() => {
     let ignore = false
 
     async function loadExamData() {
-      if (!currentWord) {
+      if (!currentWordId) {
         return
       }
 
@@ -97,8 +99,8 @@ function TopicStudyPageContent() {
 
       try {
         const nextExamData = mode === 'flashcard'
-          ? await getFlashcardExam(currentWord.id)
-          : await getMultipleChoiceExam(currentWord.id)
+          ? await getFlashcardExam(currentWordId)
+          : await getMultipleChoiceExam(currentWordId)
 
         if (!ignore) {
           setExamData(nextExamData)
@@ -121,7 +123,7 @@ function TopicStudyPageContent() {
     return () => {
       ignore = true
     }
-  }, [mode, currentWord?.id])
+  }, [mode, currentWordId])
 
   if (!loading && !topic) {
     return <Navigate to="/home" replace />
@@ -195,6 +197,7 @@ function TopicStudyPageContent() {
             total={topic.words.length}
             learned={Boolean(learnedMap[resolvedWord.id])}
             totalLearned={totalLearned}
+            subtitlePrefix={resolvedWord.learnAt ? `Hoc ${formatRelativeLearnTime(resolvedWord.learnAt)}` : ''}
           />
 
           <StudyCard
@@ -206,6 +209,7 @@ function TopicStudyPageContent() {
             onToggleLearned={handleToggleLearned}
             selectedOption={selectedOption}
             onSelectOption={setSelectedOption}
+            metaText={resolvedWord.learnAt ? `Da hoc ${formatRelativeLearnTime(resolvedWord.learnAt)}` : ''}
           />
 
           <StudyNavigator

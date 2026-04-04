@@ -7,7 +7,15 @@ export default function TopicCard({
   badges = [],
   review = false,
   topicId,
+  primaryActionTo,
+  primaryActionLabel = 'Kiem tra',
+  secondaryActionTo,
+  secondaryActionLabel = 'Hoc',
 }) {
+  const hasActions = Boolean(topicId || primaryActionTo)
+  const resolvedSecondaryActionTo = secondaryActionTo ?? (topicId ? `/topics/${topicId}` : null)
+  const resolvedPrimaryActionTo = primaryActionTo ?? (topicId ? `/topics/${topicId}/study` : null)
+
   return (
     <article className={`topic-card${review ? ' review-card' : ''}`}>
       <div>
@@ -20,13 +28,18 @@ export default function TopicCard({
         {badges.map((badge) => (
           <span key={badge}>{badge}</span>
         ))}
-        {topicId ? (
+        {hasActions ? (
           <div className="topic-actions">
-            <Link to={`/topics/${topicId}`} className="btn btn-sm btn-outline-primary">
-              Hoc
-            </Link>
-            <Link to={`/topics/${topicId}/study`} className="btn btn-sm btn-primary">
-              Kiem tra
+            {resolvedSecondaryActionTo ? (
+              <Link
+                to={resolvedSecondaryActionTo}
+                className="btn btn-sm btn-outline-primary"
+              >
+                {secondaryActionLabel}
+              </Link>
+            ) : null}
+            <Link to={resolvedPrimaryActionTo} className="btn btn-sm btn-primary">
+              {primaryActionLabel}
             </Link>
           </div>
         ) : null}

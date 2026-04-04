@@ -6,11 +6,16 @@ export default function StudyNavigator({
   total,
   onPrevious,
   onNext,
+  backTo,
+  backLabel,
 }) {
+  const resolvedBackTo = backTo ?? `/topics/${topicId}`
+  const resolvedBackLabel = backLabel ?? 'Xem danh sach tu'
+
   return (
     <div className="study-nav-bar">
-      <Link to={`/topics/${topicId}`} className="btn btn-outline-secondary">
-        Xem danh sach tu
+      <Link to={resolvedBackTo} className="btn btn-outline-secondary">
+        {resolvedBackLabel}
       </Link>
 
       <div className="d-flex flex-wrap justify-content-center gap-2">

@@ -67,6 +67,7 @@ export async function getTopicById(topicId) {
     meaning: word.meaning,
     example: word.example ?? `Vi du cho tu "${word.word}" se duoc them sau.`,
     learned: Boolean(word.learn_at),
+    learnAt: word.learn_at ?? null,
     topic: word.topic,
   }))
 
@@ -142,5 +143,13 @@ export async function getLearnedWords(sessionId) {
   }
 
   const result = await response.json()
-  return result.learned_words ?? []
+  return (result.learned_words ?? []).map((word) => ({
+    id: word.id,
+    word: word.word,
+    meaning: word.meaning,
+    example: word.example ?? `Vi du cho tu "${word.word}" se duoc them sau.`,
+    topic: word.topic,
+    learnAt: word.learn_at ?? null,
+    learned: Boolean(word.learn_at),
+  }))
 }
