@@ -2,6 +2,18 @@ import { TOPIC_LIBRARY } from './mockTopics'
 
 const API_URL = import.meta.env.VITE_API_URL
 
+function mapLearnedWord(word) {
+  return {
+    id: word.id,
+    word: word.word,
+    meaning: word.meaning,
+    example: word.example ?? `Vi du cho tu "${word.word}" se duoc them sau.`,
+    topic: word.topic,
+    learnAt: word.learn_at ?? word.learnAt ?? null,
+    learned: Boolean(word.learn_at ?? word.learnAt),
+  }
+}
+
 function getTopicMeta(topicId) {
   const topic = TOPIC_LIBRARY[topicId]
 
@@ -143,13 +155,21 @@ export async function getLearnedWords(sessionId) {
   }
 
   const result = await response.json()
-  return (result.learned_words ?? []).map((word) => ({
-    id: word.id,
-    word: word.word,
-    meaning: word.meaning,
-    example: word.example ?? `Vi du cho tu "${word.word}" se duoc them sau.`,
-    topic: word.topic,
-    learnAt: word.learn_at ?? null,
-    learned: Boolean(word.learn_at),
-  }))
+  return (result.learned_words ?? []).map(mapLearnedWord)
+}
+
+export function normalizeLearnedWords(words) {
+  return (words ?? []).map(mapLearnedWord)
+}
+
+export function getLearnedWordsWebSocketUrl(sessionId) {
+  if (!API_URL || !sessionId) {
+    return ''
+  }
+
+  const url = new URL(API_URL)
+  url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:'
+  url.pathname = '/ws'
+  url.search = `session_id=${encodeURIComponent(sessionId)}`
+  return url.toString()
 }

@@ -6,12 +6,12 @@ import StudyNavigator from '../components/study/StudyNavigator'
 import StudyToolbar from '../components/study/StudyToolbar'
 import {
   getFlashcardExam,
-  getLearnedWords,
   getMultipleChoiceExam,
   getTopicById,
   markWordAsLearned,
   removeWordAsLearned,
 } from '../data/topicService'
+import { useLearnedWordsRealtime } from '../context/useLearnedWordsRealtime'
 import { formatRelativeLearnTime } from '../utils/relativeTime'
 import { getStoredUserId } from '../utils/session'
 import './TopicExperience.css'
@@ -23,7 +23,6 @@ function TopicStudyPageContent() {
   const [mode, setMode] = useState('flashcard')
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedOption, setSelectedOption] = useState('')
-  const [learnedMap, setLearnedMap] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [examData, setExamData] = useState(null)
@@ -31,6 +30,7 @@ function TopicStudyPageContent() {
   const [examError, setExamError] = useState('')
   const [savingLearned, setSavingLearned] = useState(false)
   const [saveLearnedError, setSaveLearnedError] = useState('')
+  const { learnedWords, loading: learnedWordsLoading, error: learnedWordsError } = useLearnedWordsRealtime()
 
   useEffect(() => {
     let ignore = false
@@ -40,15 +40,7 @@ function TopicStudyPageContent() {
       setError('')
 
       try {
-        const [topicData, learnedWords] = await Promise.all([
-          getTopicById(topicId),
-          getLearnedWords(sessionId),
-        ])
-        const learnedWordIds = new Set(
-          learnedWords
-            .filter((word) => String(word.topic) === String(topicId))
-            .map((word) => word.id)
-        )
+        const topicData = await getTopicById(topicId)
 
         if (!ignore) {
           setTopic(topicData)
@@ -56,14 +48,6 @@ function TopicStudyPageContent() {
           setSelectedOption('')
           setExamData(null)
           setExamError('')
-          setLearnedMap(
-            Object.fromEntries(
-              (topicData?.words ?? []).map((word) => [
-                word.id,
-                learnedWordIds.has(word.id),
-              ])
-            )
-          )
         }
       } catch (fetchError) {
         if (!ignore) {
@@ -83,7 +67,31 @@ function TopicStudyPageContent() {
     }
   }, [topicId, sessionId])
 
-  const currentWord = topic?.words?.[currentIndex]
+  const learnedWordMap = new Map(learnedWords.map((word) => [word.id, word]))
+  const resolvedTopic = topic
+    ? {
+        ...topic,
+        words: topic.words.map((word) => {
+          const learnedWord = learnedWordMap.get(word.id)
+
+          if (!learnedWord) {
+            return {
+              ...word,
+              learned: false,
+              learnAt: null,
+            }
+          }
+
+          return {
+            ...word,
+            learned: true,
+            learnAt: learnedWord.learnAt,
+          }
+        }),
+      }
+    : null
+
+  const currentWord = resolvedTopic?.words?.[currentIndex]
   const currentWordId = currentWord?.id ?? null
 
   useEffect(() => {
@@ -125,11 +133,11 @@ function TopicStudyPageContent() {
     }
   }, [mode, currentWordId])
 
-  if (!loading && !topic) {
+  if (!loading && !resolvedTopic) {
     return <Navigate to="/home" replace />
   }
 
-  if (!topic || topic.words.length === 0) {
+  if (!resolvedTopic || resolvedTopic.words.length === 0) {
     return (
       <main className="topic-page-shell">
         <div className="container-fluid py-4 py-lg-5">
@@ -142,8 +150,8 @@ function TopicStudyPageContent() {
     )
   }
 
-  const resolvedWord = currentWord ?? topic.words[0]
-  const totalLearned = Object.values(learnedMap).filter(Boolean).length
+  const resolvedWord = currentWord ?? resolvedTopic.words[0]
+  const totalLearned = resolvedTopic.words.filter((word) => word.learned).length
 
   function handleModeChange(nextMode) {
     setMode(nextMode)
@@ -167,11 +175,6 @@ function TopicStudyPageContent() {
       } else {
         await removeWordAsLearned(sessionId, resolvedWord.id)
       }
-
-      setLearnedMap((previous) => ({
-        ...previous,
-        [resolvedWord.id]: checked,
-      }))
     } catch (saveError) {
       setSaveLearnedError(saveError.message || 'Cannot save learned progress.')
     } finally {
@@ -185,6 +188,8 @@ function TopicStudyPageContent() {
         <div className="topic-page-frame mx-auto">
           {loading ? <div className="topic-feedback">Dang tai topic...</div> : null}
           {error ? <div className="topic-feedback topic-feedback-error">{error}</div> : null}
+          {learnedWordsLoading ? <div className="topic-feedback">Dang dong bo tien do hoc...</div> : null}
+          {learnedWordsError ? <div className="topic-feedback topic-feedback-error">{learnedWordsError}</div> : null}
           {examLoading ? <div className="topic-feedback">Dang tai noi dung bai hoc...</div> : null}
           {examError ? <div className="topic-feedback topic-feedback-error">{examError}</div> : null}
           {savingLearned ? <div className="topic-feedback">Dang cap nhat tien do hoc...</div> : null}
@@ -194,8 +199,8 @@ function TopicStudyPageContent() {
             mode={mode}
             onModeChange={handleModeChange}
             currentIndex={currentIndex}
-            total={topic.words.length}
-            learned={Boolean(learnedMap[resolvedWord.id])}
+            total={resolvedTopic.words.length}
+            learned={Boolean(resolvedWord.learned)}
             totalLearned={totalLearned}
             subtitlePrefix={resolvedWord.learnAt ? `Hoc ${formatRelativeLearnTime(resolvedWord.learnAt)}` : ''}
           />
@@ -204,7 +209,7 @@ function TopicStudyPageContent() {
             word={resolvedWord}
             mode={mode}
             examData={examData}
-            isLearned={Boolean(learnedMap[resolvedWord.id])}
+            isLearned={Boolean(resolvedWord.learned)}
             isSavingLearned={savingLearned}
             onToggleLearned={handleToggleLearned}
             selectedOption={selectedOption}
@@ -213,9 +218,9 @@ function TopicStudyPageContent() {
           />
 
           <StudyNavigator
-            topicId={topic.id}
+            topicId={resolvedTopic.id}
             currentIndex={currentIndex}
-            total={topic.words.length}
+            total={resolvedTopic.words.length}
             onPrevious={handlePrevious}
             onNext={handleNext}
           />

@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage'
 import ReviewSessionPage from './pages/ReviewSessionPage'
 import TopicWordsPage from './pages/TopicWordsPage'
 import TopicStudyPage from './pages/TopicStudyPage'
+import { LearnedWordsRealtimeProvider } from './context/LearnedWordsRealtimeContext.jsx'
 
 import { USER_ID_STORAGE_KEY } from './utils/session'
 
@@ -66,17 +67,19 @@ function App() {
     //   onReset={handleReset}
     // />
 
-    <Routes>
-      <Route path="/" element={<FirstPage 
-              userId={userId} 
-              onContinue={handleContinue} 
-              onReset={handleReset} 
-              onNew={handleNew}/>} />
-      <Route path="/home" element={<HomePage />} />
-      <Route path="/review" element={<ReviewSessionPage />} />
-      <Route path="/topics/:topicId" element={<TopicWordsPage />} />
-      <Route path="/topics/:topicId/study" element={<TopicStudyPage />} />
-    </Routes>
+    <LearnedWordsRealtimeProvider sessionId={userId}>
+      <Routes>
+        <Route path="/" element={<FirstPage 
+                userId={userId} 
+                onContinue={handleContinue} 
+                onReset={handleReset} 
+                onNew={handleNew}/>} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/review" element={<ReviewSessionPage />} />
+        <Route path="/topics/:topicId" element={<TopicWordsPage />} />
+        <Route path="/topics/:topicId/study" element={<TopicStudyPage />} />
+      </Routes>
+    </LearnedWordsRealtimeProvider>
   )
 }
 

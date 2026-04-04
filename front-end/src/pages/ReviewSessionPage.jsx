@@ -6,69 +6,43 @@ import StudyNavigator from '../components/study/StudyNavigator'
 import StudyToolbar from '../components/study/StudyToolbar'
 import {
   getFlashcardExam,
-  getLearnedWords,
   getMultipleChoiceExam,
   removeWordAsLearned,
 } from '../data/topicService'
+import { useLearnedWordsRealtime } from '../context/useLearnedWordsRealtime'
 import { formatRelativeLearnTime } from '../utils/relativeTime'
 import { getStoredUserId } from '../utils/session'
 import './TopicExperience.css'
 
 function ReviewSessionPageContent() {
   const sessionId = getStoredUserId()
-  const [reviewWords, setReviewWords] = useState([])
   const [mode, setMode] = useState('flashcard')
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedOption, setSelectedOption] = useState('')
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
   const [examData, setExamData] = useState(null)
   const [examLoading, setExamLoading] = useState(false)
   const [examError, setExamError] = useState('')
   const [savingLearned, setSavingLearned] = useState(false)
   const [saveLearnedError, setSaveLearnedError] = useState('')
+  const { learnedWords, loading, error } = useLearnedWordsRealtime()
+
+  const reviewWords = learnedWords
+    .filter((word) => word.learned)
+    .sort((left, right) => {
+      const leftTime = left.learnAt ? new Date(left.learnAt).getTime() : 0
+      const rightTime = right.learnAt ? new Date(right.learnAt).getTime() : 0
+      return leftTime - rightTime
+    })
 
   useEffect(() => {
-    let ignore = false
-
-    async function loadReviewWords() {
-      setLoading(true)
-      setError('')
-
-      try {
-        const learnedWords = await getLearnedWords(sessionId)
-        const nextReviewWords = learnedWords
-          .filter((word) => word.learned)
-          .sort((left, right) => {
-            const leftTime = left.learnAt ? new Date(left.learnAt).getTime() : 0
-            const rightTime = right.learnAt ? new Date(right.learnAt).getTime() : 0
-            return leftTime - rightTime
-          })
-
-        if (!ignore) {
-          setReviewWords(nextReviewWords)
-          setCurrentIndex(0)
-          setSelectedOption('')
-          setExamData(null)
-          setExamError('')
-        }
-      } catch (fetchError) {
-        if (!ignore) {
-          setError(fetchError.message || 'Cannot load learned words.')
-        }
-      } finally {
-        if (!ignore) {
-          setLoading(false)
-        }
+    setCurrentIndex((index) => {
+      if (reviewWords.length === 0) {
+        return 0
       }
-    }
 
-    loadReviewWords()
-
-    return () => {
-      ignore = true
-    }
-  }, [sessionId])
+      return Math.min(index, reviewWords.length - 1)
+    })
+  }, [reviewWords.length])
 
   const currentWord = reviewWords[currentIndex] ?? null
   const currentWordId = currentWord?.id ?? null
@@ -124,17 +98,6 @@ function ReviewSessionPageContent() {
     try {
       if (!checked) {
         await removeWordAsLearned(sessionId, currentWord.id)
-
-        setReviewWords((previous) => {
-          const nextWords = previous.filter((word) => word.id !== currentWord.id)
-          const nextIndex = nextWords.length === 0
-            ? 0
-            : Math.min(currentIndex, nextWords.length - 1)
-
-          setCurrentIndex(nextIndex)
-          return nextWords
-        })
-
         return
       }
     } catch (saveError) {
