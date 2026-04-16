@@ -12,6 +12,14 @@ def create_learned_words_payload(session_id: str, learned_words: list[dict], mes
     }
 
 
+def create_media_payload(session_id: str, media_payload: dict):
+    return {
+        "type": "vocabulary_media_updated",
+        "session_id": session_id,
+        "media": media_payload,
+    }
+
+
 @router.websocket("/ws")
 async def websocket_endpoint(ws: WebSocket, session_id: str):
     await ws.accept()
@@ -47,6 +55,18 @@ async def push_learned_words_to_session(session_id: str, learned_words: list[dic
                     learned_words,
                     "learned_words_updated",
                 )
+            )
+            return True
+        except Exception:
+            del clients_by_session[session_id]
+    return False
+
+
+async def push_media_update_to_session(session_id: str, media_payload: dict):
+    if session_id in clients_by_session:
+        try:
+            await clients_by_session[session_id].send_json(
+                create_media_payload(session_id, media_payload)
             )
             return True
         except Exception:

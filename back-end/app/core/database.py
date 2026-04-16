@@ -25,3 +25,8 @@ def check_database_connection(max_retries: int = 10, delay_seconds: int = 3) -> 
             time.sleep(delay_seconds)
 
     raise last_error
+
+
+def ensure_vocabulary_media_columns() -> None:
+    with engine.begin() as connection:
+        connection.execute(text("ALTER TABLE IF EXISTS vocabularies ADD COLUMN IF NOT EXISTS local_url VARCHAR(255)"))

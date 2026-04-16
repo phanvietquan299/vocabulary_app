@@ -8,6 +8,9 @@ class Settings(BaseSettings):
     postgres_host: str = "db"
     postgres_port: int = 5433
     database_url: str = "postgresql://postgres:postgres@db:5433/vocab_app"
+    pexels_api_key: str = ""
+    pexels_api_base_url: str = "https://api.pexels.com/v1"
+    dictionary_api_base_url: str = "https://api.dictionaryapi.dev/api/v2"
     secret_key: str = "your_super_secret_key_for_jwt"
     access_token_expire_minutes: int = 30
     debug: bool = True
