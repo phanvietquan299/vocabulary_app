@@ -31,6 +31,7 @@ export default function StudyCard({
       ) : (
         <MultipleChoiceMode
           examData={examData}
+          fallbackWord={word}
           selectedOption={selectedOption}
           onSelectOption={onSelectOption}
         />

@@ -3,6 +3,7 @@ import './HomePage.css'
 import HomeHeader from '../components/home/HomeHeader'
 import TopicList from '../components/home/TopicList'
 import ProgressPanel from '../components/home/ProgressPanel'
+import DashboardSidebar from '../components/home/DashboardSidebar'
 import RequireSession from '../components/shared/RequireSession'
 import { getTopicList, getDashboardData } from '../data/topicService'
 import { useLearnedWordsRealtime } from '../context/useLearnedWordsRealtime'
@@ -13,12 +14,7 @@ export default function HomePage() {
   const [dashboard, setDashboard] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const {
-    learnedWords,
-    loading: learnedWordsLoading,
-    error: learnedWordsError,
-    connectionState,
-  } = useLearnedWordsRealtime()
+  const { learnedWords } = useLearnedWordsRealtime()
 
   useEffect(() => {
     let ignore = false
@@ -86,6 +82,7 @@ export default function HomePage() {
       id: topicId,
       title: topicMeta?.title ?? topicId,
       subtitle: topicMeta?.subtitle ?? 'Topic vocabulary',
+      coverImageUrl: topicMeta?.coverImageUrl ?? null,
       total,
       learned,
       progress: total > 0 ? Math.round((learned / total) * 100) : 0,
@@ -94,10 +91,10 @@ export default function HomePage() {
 
   const progressStats = [
     {
-      label: 'Tong tien do',
+      label: 'Tổng tiến độ',
       value: Number(overallProgress.percentage || 0),
       displayValue: `${Math.round(Number(overallProgress.percentage || 0))}%`,
-      tone: 'success',
+      tone: 'ink',
     },
     {
       label: 'Tong tu da hoc',
@@ -106,14 +103,14 @@ export default function HomePage() {
         ? Math.round((overallProgress.learned / overallProgress.total) * 100)
         : 0,
       displayValue: `${overallProgress.learned} tu`,
-      tone: 'primary',
+      tone: 'gray',
     },
     {
       label: 'Tong so tu',
       value: 100,
       barValue: 100,
       displayValue: `${overallProgress.total} tu`,
-      tone: 'warning',
+      tone: 'paper',
     },
   ]
 
@@ -122,22 +119,22 @@ export default function HomePage() {
       <main className="home-page">
         <div className="container-fluid py-4 py-lg-5">
           <div className="home-shell mx-auto">
-            <HomeHeader />
+            <div className="dashboard-layout">
+              <DashboardSidebar />
 
-            {loading ? <div className="dashboard-feedback">Dang tai dashboard...</div> : null}
-            {error ? <div className="dashboard-feedback dashboard-feedback-error">{error}</div> : null}
-            {learnedWordsLoading ? <div className="dashboard-feedback">Dang dong bo tien do hoc...</div> : null}
-            {learnedWordsError ? <div className="dashboard-feedback dashboard-feedback-error">{learnedWordsError}</div> : null}
-            {userId && connectionState !== 'connected' && !learnedWordsLoading ? (
-              <div className="dashboard-feedback">
-                Realtime observer: {connectionState === 'connecting' ? 'dang ket noi...' : 'tam mat ket noi, se tu ket noi lai.'}
-              </div>
-            ) : null}
+              <section className="dashboard-main">
+                <HomeHeader />
 
-            <section className="home-grid">
-              <TopicList topics={topicRows} />
-              <ProgressPanel items={progressStats} />
-            </section>
+                {loading ? <div className="dashboard-feedback">Dang tai dashboard...</div> : null}
+                {error ? <div className="dashboard-feedback dashboard-feedback-error">{error}</div> : null}
+
+                <div id="topics-hub">
+                  <TopicList topics={topicRows} />
+                </div>
+              </section>
+
+              <ProgressPanel items={progressStats} overallProgress={overallProgress} />
+            </div>
           </div>
         </div>
       </main>

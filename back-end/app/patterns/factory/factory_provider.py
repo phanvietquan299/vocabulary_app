@@ -4,6 +4,7 @@ from app.patterns.factory.travel_factory import TravelFactory
 from app.patterns.factory.family_factory import FamilyFactory
 from app.patterns.factory.school_factory import SchoolFactory
 from app.patterns.factory.work_factory import WorkFactory
+from app.patterns.factory.music_factory import MusicFactory
 from app.models.topic import Topic
 
 from app.models.vocabulary_model import VocabularyModel
@@ -17,7 +18,8 @@ class FactoryProvider:
         Topic.TRAVEL: TravelFactory(),
         Topic.FAMILY: FamilyFactory(),
         Topic.SCHOOL: SchoolFactory(),
-        Topic.WORK: WorkFactory()
+        Topic.WORK: WorkFactory(),
+        Topic.MUSIC: MusicFactory(),
     }
     db = SessionLocal()
 
@@ -38,7 +40,10 @@ class FactoryProvider:
                 meaning=word_model.meaning,
                 topic=Topic(word_model.topic),
                 pronunciation=word_model.pronunciation,
+                local_url=word_model.local_url,
+                remote_url=word_model.remote_url,
                 image_url=word_model.image_url,
+                audio_url=word_model.audio_url,
             )
             for word_model in self.get_all_vocabulary()
         ]
@@ -53,5 +58,8 @@ class FactoryProvider:
             meaning=word_model.meaning,
             topic=Topic(word_model.topic),
             pronunciation=word_model.pronunciation,
+            local_url=word_model.local_url,
+            remote_url=word_model.remote_url,
             image_url=word_model.image_url,
+            audio_url=word_model.audio_url,
         )

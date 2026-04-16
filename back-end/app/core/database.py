@@ -30,3 +30,20 @@ def check_database_connection(max_retries: int = 10, delay_seconds: int = 3) -> 
 def ensure_vocabulary_media_columns() -> None:
     with engine.begin() as connection:
         connection.execute(text("ALTER TABLE IF EXISTS vocabularies ADD COLUMN IF NOT EXISTS local_url VARCHAR(255)"))
+        connection.execute(text("ALTER TABLE IF EXISTS vocabularies ADD COLUMN IF NOT EXISTS remote_url VARCHAR(255)"))
+        connection.execute(text("ALTER TABLE IF EXISTS vocabularies ADD COLUMN IF NOT EXISTS image_url VARCHAR(255)"))
+        connection.execute(text("ALTER TABLE IF EXISTS vocabularies ADD COLUMN IF NOT EXISTS audio_url VARCHAR(255)"))
+
+
+def ensure_topic_image_configs_table() -> None:
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                """
+                CREATE TABLE IF NOT EXISTS topic_image_configs (
+                    topic VARCHAR(50) PRIMARY KEY,
+                    keywords TEXT NOT NULL
+                )
+                """
+            )
+        )

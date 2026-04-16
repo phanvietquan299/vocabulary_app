@@ -11,7 +11,10 @@ class VocabularyModel(Base):
     meaning = Column(String(255), nullable=False)
     pronunciation = Column(String(100))
     example = Column(String(255))
+    local_url = Column(String(255))
+    remote_url = Column(String(255))
     image_url = Column(String(255))
+    audio_url = Column(String(255))
     topic = Column(String(50))
 
     def to_dict(self):
@@ -21,6 +24,9 @@ class VocabularyModel(Base):
             "meaning": self.meaning,
             "pronunciation": self.pronunciation,
             "example": self.example,
+            "local_url": self.local_url,
+            "remote_url": self.remote_url,
             "image_url": self.image_url,
+            "audio_url": self.audio_url,
             "topic": self.topic
         }

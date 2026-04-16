@@ -44,3 +44,13 @@ INSERT INTO vocabularies (word, meaning, pronunciation, topic) VALUES
 ('singer', 'ca sĩ', '/ˈsɪŋ.ər/', 'music'),
 ('concert', 'buổi hòa nhạc', '/ˈkɑːn.sɚt/', 'music'),
 ('headphones', 'tai nghe', '/ˈhed.foʊnz/', 'music');
+
+INSERT INTO topic_image_configs (topic, keywords) VALUES
+('animal', 'animal, pet, cute, portrait'),
+('family', 'family, parent, mother, father, home'),
+('school', 'student, study, classroom, books, desk'),
+('travel', 'travel, passport, suitcase, luggage, road'),
+('work', 'office, work, business, desk, meeting'),
+('food', 'food, meal, dish, plate, kitchen'),
+('music', 'music, guitar, piano, singer, concert')
+ON CONFLICT (topic) DO UPDATE SET keywords = EXCLUDED.keywords;

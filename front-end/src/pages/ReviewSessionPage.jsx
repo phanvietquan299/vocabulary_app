@@ -138,7 +138,7 @@ function ReviewSessionPageContent() {
               onPrevious={() => {}}
               onNext={() => {}}
               backTo="/home"
-              backLabel="Quay ve home"
+              backLabel="Home"
             />
           </div>
         </div>
@@ -189,7 +189,7 @@ function ReviewSessionPageContent() {
                 onPrevious={() => setCurrentIndex((index) => Math.max(index - 1, 0))}
                 onNext={() => setCurrentIndex((index) => Math.min(index + 1, reviewWords.length - 1))}
                 backTo="/home"
-                backLabel="Quay ve home"
+                backLabel="Home"
               />
             </>
           ) : null}

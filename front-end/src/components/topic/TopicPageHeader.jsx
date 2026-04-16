@@ -11,10 +11,7 @@ export default function TopicPageHeader({ title, subtitle, topicId }) {
 
       <div className="d-flex flex-wrap gap-2">
         <Link to="/home" className="btn btn-outline-secondary">
-          Ve trang chu
-        </Link>
-        <Link to={`/topics/${topicId}/study`} className="btn btn-primary">
-          Kiem tra topic nay
+          Home
         </Link>
       </div>
     </header>

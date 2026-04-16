@@ -10,3 +10,8 @@ CREATE TABLE IF NOT EXISTS vocabularies (
     audio_url VARCHAR(255),
     topic VARCHAR(50)
 );
+
+CREATE TABLE IF NOT EXISTS topic_image_configs (
+    topic VARCHAR(50) PRIMARY KEY,
+    keywords TEXT NOT NULL
+);

@@ -7,8 +7,8 @@ from app.models.vocabulary_model import VocabularyModel
 class TravelFactory(VocabularyFactory):
     db = SessionLocal()
 
-    def create_vocabulary(self, word, meaning, pronunciation=None, image_url=None):
-        return Vocabulary(word, meaning, Topic.TRAVEL, pronunciation, image_url)
+    def create_vocabulary(self, word, meaning, pronunciation=None, local_url=None, remote_url=None, image_url=None, audio_url=None):
+        return Vocabulary(word, meaning, Topic.TRAVEL, pronunciation, local_url, remote_url, image_url, audio_url)
     
     def get_vocabulary_topic(self):
         words = self.db.query(VocabularyModel).filter(VocabularyModel.topic == Topic.TRAVEL.value).all()
@@ -19,7 +19,10 @@ class TravelFactory(VocabularyFactory):
                 meaning=word.meaning,
                 topic=Topic.TRAVEL,
                 pronunciation=word.pronunciation,
+                local_url=word.local_url,
+                remote_url=word.remote_url,
                 image_url=word.image_url,
+                audio_url=word.audio_url,
             )
             for word in words
         ]

@@ -46,6 +46,142 @@
   gap: 1rem;
 }
 
+.topic-step-shell {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.topic-step-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(19, 34, 56, 0.08);
+  border-radius: 28px;
+  box-shadow: 0 20px 50px rgba(19, 34, 56, 0.1);
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.topic-step-card__header {
+  align-items: start;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.topic-step-card__kicker {
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.topic-step-card__title {
+  color: #0f172a;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 900;
+  line-height: 1.05;
+}
+
+.topic-step-card__pronunciation {
+  color: #475569;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.topic-step-card__counter {
+  align-items: center;
+  background: #0f172a;
+  border-radius: 999px;
+  color: #ffffff;
+  display: inline-flex;
+  gap: 0.3rem;
+  padding: 0.55rem 0.85rem;
+}
+
+.topic-step-card__counter span {
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.topic-step-card__counter small {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.topic-step-card__body {
+  display: grid;
+  gap: 1rem;
+}
+
+.topic-step-card__label {
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.topic-step-card__meaning {
+  color: #0f172a;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.topic-step-card__example {
+  color: #475569;
+  font-size: 1rem;
+}
+
+.topic-step-nav {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+
+.topic-step-nav__button {
+  border-radius: 999px;
+  min-width: 140px;
+}
+
+.topic-completion-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 28px;
+  box-shadow: 0 20px 50px rgba(19, 34, 56, 0.1);
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 1rem;
+  padding: 1.5rem;
+}
+
+.topic-completion-card__badge {
+  color: #64748b;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.topic-completion-card__title {
+  color: #0f172a;
+  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  font-weight: 900;
+}
+
+.topic-completion-card__text {
+  color: #475569;
+  max-width: 62ch;
+}
+
+.topic-completion-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
 .topic-feedback {
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(19, 34, 56, 0.08);
@@ -74,6 +210,63 @@
   gap: 1rem;
   grid-template-columns: auto minmax(0, 1fr);
   padding: 1.25rem;
+}
+
+.vocab-decorator {
+  display: grid;
+  gap: 1rem;
+}
+
+.vocab-decorator-compact {
+  margin-bottom: 0.8rem;
+}
+
+.vocab-image-decorator {
+  justify-items: center;
+}
+
+.vocab-media-frame {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+}
+
+.vocab-media-image {
+  aspect-ratio: 16 / 10;
+  background: #eef4ff;
+  border: 1px solid rgba(19, 34, 56, 0.08);
+  border-radius: 20px;
+  object-fit: cover;
+  max-width: 420px;
+  width: 100%;
+}
+
+.vocab-decorator-compact .vocab-media-image {
+  max-width: 240px;
+}
+
+.vocab-audio-decorator {
+  display: grid;
+  gap: 0.7rem;
+  justify-items: center;
+}
+
+.vocab-audio-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.vocab-audio-loading {
+  color: #60718a;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.vocab-audio-player {
+  width: 100%;
 }
 
 .word-list-order {
@@ -256,8 +449,24 @@
 }
 
 @media (max-width: 767.98px) {
+  .topic-step-card__header {
+    flex-direction: column;
+  }
+
+  .topic-step-nav {
+    flex-direction: column-reverse;
+  }
+
+  .topic-step-nav__button {
+    width: 100%;
+  }
+
   .word-list-card {
     grid-template-columns: 1fr;
+  }
+
+  .vocab-media-image {
+    max-width: 100%;
   }
 
   .study-card {

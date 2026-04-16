@@ -4,20 +4,21 @@ from app.models.topic import Topic
 from app.core.database import SessionLocal
 from app.models.vocabulary_model import VocabularyModel
 
-class SchoolFactory(VocabularyFactory):
+
+class MusicFactory(VocabularyFactory):
     db = SessionLocal()
 
     def create_vocabulary(self, word, meaning, pronunciation=None, local_url=None, remote_url=None, image_url=None, audio_url=None):
-        return Vocabulary(word, meaning, Topic.SCHOOL, pronunciation, local_url, remote_url, image_url, audio_url)
-    
+        return Vocabulary(word, meaning, Topic.MUSIC, pronunciation, local_url, remote_url, image_url, audio_url)
+
     def get_vocabulary_topic(self):
-        words = self.db.query(VocabularyModel).filter(VocabularyModel.topic == Topic.SCHOOL.value).all()
+        words = self.db.query(VocabularyModel).filter(VocabularyModel.topic == Topic.MUSIC.value).all()
         return [
             Vocabulary(
                 id=word.id,
                 word=word.word,
                 meaning=word.meaning,
-                topic=Topic.SCHOOL,
+                topic=Topic.MUSIC,
                 pronunciation=word.pronunciation,
                 local_url=word.local_url,
                 remote_url=word.remote_url,

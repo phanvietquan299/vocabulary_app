@@ -7,3 +7,4 @@ class Topic(str, Enum):
     SCHOOL = "school"
     WORK = "work"
     FOOD = "food"
+    MUSIC = "music"

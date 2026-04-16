@@ -2,6 +2,15 @@ import { TOPIC_LIBRARY } from './mockTopics'
 
 const API_URL = import.meta.env.VITE_API_URL
 
+const TOPIC_COVER_IMAGES = {
+  animal: 'https://images.pexels.com/photos/18554901/pexels-photo-18554901.jpeg',
+  travel: 'https://images.pexels.com/photos/7009831/pexels-photo-7009831.jpeg',
+  family: 'https://images.pexels.com/photos/35929436/pexels-photo-35929436.jpeg',
+  school: 'https://images.pexels.com/photos/8926405/pexels-photo-8926405.jpeg',
+  work: 'https://images.pexels.com/photos/5686020/pexels-photo-5686020.jpeg',
+  music: 'https://images.pexels.com/photos/15487609/pexels-photo-15487609.jpeg',
+}
+
 function mapLearnedWord(word) {
   return {
     id: word.id,
@@ -11,6 +20,11 @@ function mapLearnedWord(word) {
     topic: word.topic,
     learnAt: word.learn_at ?? word.learnAt ?? null,
     learned: Boolean(word.learn_at ?? word.learnAt),
+    localUrl: word.local_url ?? word.localUrl ?? null,
+    remoteUrl: word.remote_url ?? word.remoteUrl ?? null,
+    imageUrl: word.local_url ?? word.image_url ?? word.remote_url ?? word.imageUrl ?? word.remoteUrl ?? null,
+    audioUrl: word.audio_url ?? word.audioUrl ?? null,
+    pronunciation: word.pronunciation ?? null,
   }
 }
 
@@ -37,6 +51,7 @@ export function getTopicList() {
       id: topic.id,
       title: topic.title,
       subtitle: topic.subtitle,
+      coverImageUrl: TOPIC_COVER_IMAGES[topic.id] ?? TOPIC_COVER_IMAGES.school,
       total,
       learned,
       progress: total > 0 ? Math.round((learned / total) * 100) : 0,
@@ -81,6 +96,11 @@ export async function getTopicById(topicId) {
     learned: Boolean(word.learn_at),
     learnAt: word.learn_at ?? null,
     topic: word.topic,
+    localUrl: word.local_url ?? null,
+    remoteUrl: word.remote_url ?? null,
+    imageUrl: word.local_url ?? word.image_url ?? word.remote_url ?? null,
+    audioUrl: word.audio_url ?? null,
+    pronunciation: word.pronunciation ?? null,
   }))
 
   return {
@@ -160,6 +180,22 @@ export async function getLearnedWords(sessionId) {
 
 export function normalizeLearnedWords(words) {
   return (words ?? []).map(mapLearnedWord)
+}
+
+export async function generateVocabularyMedia(wordId, sessionId = '') {
+  const requestUrl = new URL(`${API_URL}/images/${encodeURIComponent(wordId)}`)
+
+  if (sessionId) {
+    requestUrl.searchParams.set('session_id', sessionId)
+  }
+
+  const response = await fetch(requestUrl.toString())
+
+  if (!response.ok) {
+    throw new Error('Failed to generate vocabulary media.')
+  }
+
+  return response.json()
 }
 
 export function getLearnedWordsWebSocketUrl(sessionId) {

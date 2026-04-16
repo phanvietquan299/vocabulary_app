@@ -174,6 +174,55 @@ export const TOPIC_LIBRARY = {
       },
     ],
   },
+  music: {
+    id: 'music',
+    title: 'Music',
+    subtitle: 'Am nhac va nhac cu',
+    words: [
+      {
+        id: 'music-song',
+        word: 'Song',
+        meaning: 'Bai hat',
+        example: 'This song is very easy to remember.',
+        learned: true,
+      },
+      {
+        id: 'music-guitar',
+        word: 'Guitar',
+        meaning: 'Dan guitar',
+        example: 'He plays the guitar every evening.',
+        learned: false,
+      },
+      {
+        id: 'music-piano',
+        word: 'Piano',
+        meaning: 'Dan piano',
+        example: 'She learned piano when she was five.',
+        learned: false,
+      },
+      {
+        id: 'music-drum',
+        word: 'Drum',
+        meaning: 'Trong',
+        example: 'The drum beat was loud and powerful.',
+        learned: false,
+      },
+      {
+        id: 'music-singer',
+        word: 'Singer',
+        meaning: 'Ca si',
+        example: 'The singer performed on a big stage.',
+        learned: true,
+      },
+      {
+        id: 'music-concert',
+        word: 'Concert',
+        meaning: 'Buoi hoa nhac',
+        example: 'We went to a concert last weekend.',
+        learned: false,
+      },
+    ],
+  },
 }
 
 export function getTopicList() {
