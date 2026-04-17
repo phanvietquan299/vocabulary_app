@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL
+const API_URL = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '')
 
 export const DEFAULT_VOCABULARY_IMAGE = '/studying.png'
 
@@ -11,7 +11,7 @@ export function resolveBackendMediaUrl(mediaUrl) {
     return mediaUrl
   }
 
-  if ((mediaUrl.startsWith('/media/') || mediaUrl.startsWith('/static/')) && API_URL) {
+  if ((mediaUrl.startsWith('/media/') || mediaUrl.startsWith('/static/')) && API_URL.startsWith('http')) {
     return `${API_URL}${mediaUrl}`
   }
 

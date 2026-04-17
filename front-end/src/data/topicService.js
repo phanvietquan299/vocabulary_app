@@ -1,6 +1,35 @@
 import { TOPIC_LIBRARY } from './mockTopics'
 
-const API_URL = import.meta.env.VITE_API_URL
+const API_URL = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '')
+
+function buildApiPath(path) {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`
+  return `${API_URL}${normalizedPath}`
+}
+
+function buildWebSocketUrl(pathname, sessionId) {
+  if (!sessionId) {
+    return ''
+  }
+
+  if (API_URL.startsWith('http://') || API_URL.startsWith('https://')) {
+    const url = new URL(API_URL)
+    url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:'
+    url.pathname = pathname
+    url.searchParams.set('session_id', sessionId)
+    return url.toString()
+  }
+
+  if (typeof window === 'undefined') {
+    return ''
+  }
+
+  const url = new URL(window.location.origin)
+  url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:'
+  url.pathname = pathname
+  url.searchParams.set('session_id', sessionId)
+  return url.toString()
+}
 
 const TOPIC_COVER_IMAGES = {
   animal: 'https://images.pexels.com/photos/18554901/pexels-photo-18554901.jpeg',
@@ -61,7 +90,7 @@ export function getTopicList() {
 
 export async function getDashboardData(sessionId) {
   const response = await fetch(
-    `${API_URL}/dashboard/user?session_id=${encodeURIComponent(sessionId)}`
+    buildApiPath(`/dashboard/user?session_id=${encodeURIComponent(sessionId)}`)
   )
 
   if (!response.ok) {
@@ -80,7 +109,7 @@ export async function getTopicById(topicId) {
   }
 
   const response = await fetch(
-    `${API_URL}/vocabulary?topic=${encodeURIComponent(topicId)}`
+    buildApiPath(`/vocabulary?topic=${encodeURIComponent(topicId)}`)
   )
 
   if (!response.ok) {
@@ -111,7 +140,7 @@ export async function getTopicById(topicId) {
 
 export async function getFlashcardExam(wordId) {
   const response = await fetch(
-    `${API_URL}/exam/exam-object-flashcard?word_id=${encodeURIComponent(wordId)}`
+    buildApiPath(`/exam/exam-object-flashcard?word_id=${encodeURIComponent(wordId)}`)
   )
 
   if (!response.ok) {
@@ -124,7 +153,7 @@ export async function getFlashcardExam(wordId) {
 
 export async function getMultipleChoiceExam(wordId) {
   const response = await fetch(
-    `${API_URL}/exam/exam-object-multiple-choices?word_id=${encodeURIComponent(wordId)}`
+    buildApiPath(`/exam/exam-object-multiple-choices?word_id=${encodeURIComponent(wordId)}`)
   )
 
   if (!response.ok) {
@@ -137,7 +166,7 @@ export async function getMultipleChoiceExam(wordId) {
 
 export async function markWordAsLearned(sessionId, wordId) {
   const response = await fetch(
-    `${API_URL}/learned/add?session_id=${encodeURIComponent(sessionId)}&word_id=${encodeURIComponent(wordId)}`,
+    buildApiPath(`/learned/add?session_id=${encodeURIComponent(sessionId)}&word_id=${encodeURIComponent(wordId)}`),
     {
       method: 'POST',
     }
@@ -152,7 +181,7 @@ export async function markWordAsLearned(sessionId, wordId) {
 
 export async function removeWordAsLearned(sessionId, wordId) {
   const response = await fetch(
-    `${API_URL}/learned/remove?session_id=${encodeURIComponent(sessionId)}&word_id=${encodeURIComponent(wordId)}`,
+    buildApiPath(`/learned/remove?session_id=${encodeURIComponent(sessionId)}&word_id=${encodeURIComponent(wordId)}`),
     {
       method: 'DELETE',
     }
@@ -167,7 +196,7 @@ export async function removeWordAsLearned(sessionId, wordId) {
 
 export async function getLearnedWords(sessionId) {
   const response = await fetch(
-    `${API_URL}/learned/words?session_id=${encodeURIComponent(sessionId)}`
+    buildApiPath(`/learned/words?session_id=${encodeURIComponent(sessionId)}`)
   )
 
   if (!response.ok) {
@@ -183,7 +212,7 @@ export function normalizeLearnedWords(words) {
 }
 
 export async function generateVocabularyMedia(wordId, sessionId = '') {
-  const requestUrl = new URL(`${API_URL}/images/${encodeURIComponent(wordId)}`)
+  const requestUrl = new URL(buildApiPath(`/images/${encodeURIComponent(wordId)}`), window.location.origin)
 
   if (sessionId) {
     requestUrl.searchParams.set('session_id', sessionId)
@@ -199,13 +228,9 @@ export async function generateVocabularyMedia(wordId, sessionId = '') {
 }
 
 export function getLearnedWordsWebSocketUrl(sessionId) {
-  if (!API_URL || !sessionId) {
+  if (!sessionId) {
     return ''
   }
 
-  const url = new URL(API_URL)
-  url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:'
-  url.pathname = '/ws'
-  url.search = `session_id=${encodeURIComponent(sessionId)}`
-  return url.toString()
+  return buildWebSocketUrl('/ws', sessionId)
 }
