@@ -21,7 +21,7 @@ services:
     restart: unless-stopped
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/vocab_app
-      PEXELS_API_KEY: ${PEXELS_API_KEY:-}
+      PEXELS_API_KEY: 7JcY0cl2gQsf8P34MXplmul3FRzkvidt7o4PiWuY6u1YegSdveDx6keP
       PEXELS_API_BASE_URL: https://api.pexels.com/v1
       DICTIONARY_API_BASE_URL: https://api.dictionaryapi.dev/api/v2
       SECRET_KEY: ${SECRET_KEY:-your_super_secret_key_for_jwt}
