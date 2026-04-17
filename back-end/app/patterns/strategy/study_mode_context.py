@@ -10,5 +10,4 @@ class StudyModeContext:
         self._strategy = strategy
 
     def build_exam_object(self, word: Vocabulary) -> dict:
-        print(f"[StudyModeContext] Building exam object for word: {word.word} using strategy: {self._strategy.__class__.__name__}")
         return self._strategy.build_exam_object(word)

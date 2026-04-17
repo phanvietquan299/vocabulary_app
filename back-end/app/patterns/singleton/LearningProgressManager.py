@@ -31,7 +31,6 @@ class LearningProgressManager:
 
         self.progress_by_session[session_id].add(word)
         await self.notify_observers(session_id)
-        print(f"[LearningProgressManager] Marked word '{word.word}' as learned for session '{session_id}'. Total learned: {len(self.progress_by_session[session_id])}")
         return (
             f"Da danh dau tu '{word.to_dict().get('word', 'Unknown')}' "
             f"la da hoc cho session_id '{session_id}'"

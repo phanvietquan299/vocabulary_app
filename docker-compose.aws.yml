@@ -1,0 +1,49 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: vocab_app
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./back-end/app/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d vocab_app"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./back-end
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/vocab_app
+      PEXELS_API_KEY: ${PEXELS_API_KEY:-}
+      PEXELS_API_BASE_URL: https://api.pexels.com/v1
+      DICTIONARY_API_BASE_URL: https://api.dictionaryapi.dev/api/v2
+      SECRET_KEY: ${SECRET_KEY:-your_super_secret_key_for_jwt}
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      DEBUG: "false"
+      PORT: 8000
+    expose:
+      - "8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./front-end
+      args:
+        VITE_API_URL: /api
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:
