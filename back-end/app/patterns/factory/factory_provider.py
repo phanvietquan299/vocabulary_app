@@ -27,6 +27,7 @@ class FactoryProvider:
     def get_factory(cls, topic):
         if topic not in cls.factories:
             raise ValueError("Invalid topic")
+        print("[FactoryProvider] Providing factory for topic:", topic)
         return cls.factories[topic]
        
     def get_all_vocabulary(self):
