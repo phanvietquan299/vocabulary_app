@@ -10,6 +10,7 @@ from app.models.topic import Topic
 from app.models.vocabulary_model import VocabularyModel
 from app.core.database import SessionLocal
 from app.models.vocabulary import Vocabulary
+from app.patterns.repository.VocabularyRepository import VocabularyRepository
 
 class FactoryProvider:
 
@@ -21,7 +22,7 @@ class FactoryProvider:
         Topic.WORK: WorkFactory(),
         Topic.MUSIC: MusicFactory(),
     }
-    db = SessionLocal()
+    # db = SessionLocal()
 
     @classmethod
     def get_factory(cls, topic):
@@ -31,7 +32,7 @@ class FactoryProvider:
         return cls.factories[topic]
        
     def get_all_vocabulary(self):
-        return self.db.query(VocabularyModel).all()
+        return VocabularyRepository().get_all_vocabulary()
 
     def get_all_vocabulary_items(self):
         return [
@@ -50,17 +51,21 @@ class FactoryProvider:
         ]
 
     def get_vocabulary_by_id(self, word_id: str):
-        word_model = self.db.query(VocabularyModel).filter(VocabularyModel.id == word_id).first()
-        if not word_model:
-            return None
-        return Vocabulary(
-            id=word_model.id,
-            word=word_model.word,
-            meaning=word_model.meaning,
-            topic=Topic(word_model.topic),
-            pronunciation=word_model.pronunciation,
-            local_url=word_model.local_url,
-            remote_url=word_model.remote_url,
-            image_url=word_model.image_url,
-            audio_url=word_model.audio_url,
-        )
+        try:
+            word_model = VocabularyRepository().get_vocabulary_by_id(word_id)
+            if not word_model:
+                return None
+            return Vocabulary(
+                id=word_model.id,
+                word=word_model.word,
+                meaning=word_model.meaning,
+                topic=Topic(word_model.topic),
+                pronunciation=word_model.pronunciation,
+                local_url=word_model.local_url,
+                remote_url=word_model.remote_url,
+                image_url=word_model.image_url,
+                audio_url=word_model.audio_url,
+            )
+        except Exception as e:
+            print("[FactoryProvider] Error fetching vocabulary by ID:", str(e))
+            raise e

@@ -198,6 +198,30 @@ export async function generateVocabularyMedia(wordId, sessionId = '') {
   return response.json()
 }
 
+export async function importVocabularyFile(file) {
+  const extension = file.name.split('.').pop()?.toLowerCase()
+
+  if (!extension || !['csv', 'json'].includes(extension)) {
+    throw new Error('Only CSV and JSON files are supported.')
+  }
+
+  const formData = new FormData()
+  formData.append('file', file)
+
+  const response = await fetch(`${API_URL}/file/import-${extension}`, {
+    method: 'POST',
+    body: formData,
+  })
+
+  const result = await response.json().catch(() => ({}))
+
+  if (!response.ok) {
+    throw new Error(result.detail || 'Failed to import vocabulary file.')
+  }
+
+  return result
+}
+
 export function getLearnedWordsWebSocketUrl(sessionId) {
   if (!API_URL || !sessionId) {
     return ''

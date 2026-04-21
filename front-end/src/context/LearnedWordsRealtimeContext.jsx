@@ -11,6 +11,7 @@ export function LearnedWordsRealtimeProvider({ sessionId, children }) {
   const [loading, setLoading] = useState(Boolean(sessionId))
   const [error, setError] = useState('')
   const [connectionState, setConnectionState] = useState(sessionId ? 'connecting' : 'idle')
+  const [dashboardRefreshTick, setDashboardRefreshTick] = useState(0)
   const reconnectTimeoutRef = useRef(null)
 
   useEffect(() => {
@@ -87,6 +88,12 @@ export function LearnedWordsRealtimeProvider({ sessionId, children }) {
           ) {
             setLearnedWords(normalizeLearnedWords(payload.learned_words))
             setError('')
+            return
+          }
+
+          if (payload?.type === 'dashboard_refresh_requested') {
+            setDashboardRefreshTick((currentTick) => currentTick + 1)
+            setError('')
           }
         } catch {
           setError('Cannot process realtime learned-word updates.')
@@ -132,8 +139,9 @@ export function LearnedWordsRealtimeProvider({ sessionId, children }) {
       loading,
       error,
       connectionState,
+      dashboardRefreshTick,
     }),
-    [connectionState, error, learnedWords, loading]
+    [connectionState, dashboardRefreshTick, error, learnedWords, loading]
   )
 
   return (

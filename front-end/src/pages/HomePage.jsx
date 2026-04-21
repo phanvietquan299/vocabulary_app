@@ -14,7 +14,26 @@ export default function HomePage() {
   const [dashboard, setDashboard] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const { learnedWords } = useLearnedWordsRealtime()
+  const { learnedWords, dashboardRefreshTick } = useLearnedWordsRealtime()
+
+  async function loadDashboardData() {
+    if (!userId) {
+      setLoading(false)
+      return
+    }
+
+    setLoading(true)
+    setError('')
+
+    try {
+      const dashboardData = await getDashboardData(userId)
+      setDashboard(dashboardData)
+    } catch (fetchError) {
+      setError(fetchError.message || 'Cannot load dashboard data.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
     let ignore = false
@@ -51,6 +70,14 @@ export default function HomePage() {
       ignore = true
     }
   }, [userId])
+
+  useEffect(() => {
+    if (!userId || dashboardRefreshTick === 0) {
+      return
+    }
+
+    loadDashboardData()
+  }, [dashboardRefreshTick, userId])
 
   const baseOverallProgress = dashboard?.overall_progress ?? {
     total: 0,

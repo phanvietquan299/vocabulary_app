@@ -5,4 +5,5 @@ export const LearnedWordsRealtimeContext = createContext({
   loading: true,
   error: '',
   connectionState: 'idle',
+  dashboardRefreshTick: 0,
 })
