@@ -3,15 +3,17 @@ from app.models.vocabulary import Vocabulary
 from app.models.topic import Topic
 from app.core.database import SessionLocal
 from app.models.vocabulary_model import VocabularyModel
+from app.patterns.repository.VocabularyRepository import VocabularyRepository
 
 class SchoolFactory(VocabularyFactory):
-    db = SessionLocal()
+    def __init__(self):
+        self.repository = VocabularyRepository()
 
     def create_vocabulary(self, word, meaning, pronunciation=None, local_url=None, remote_url=None, image_url=None, audio_url=None):
         return Vocabulary(word, meaning, Topic.SCHOOL, pronunciation, local_url, remote_url, image_url, audio_url)
     
     def get_vocabulary_topic(self):
-        words = self.db.query(VocabularyModel).filter(VocabularyModel.topic == Topic.SCHOOL.value).all()
+        words = self.repository.get_vocabulary_by_topic(Topic.SCHOOL)
         return [
             Vocabulary(
                 id=word.id,

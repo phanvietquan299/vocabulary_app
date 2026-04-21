@@ -10,6 +10,7 @@ from app.routes.vocabulary_routes import router as vocabulary_router
 from app.routes.learned_list_routes import router as learned_router
 from app.routes.exam_routes import router as exam_router
 from app.routes.pages_routes import router as dashboard_router
+from app.routes.file_routes import router as file_router
 
 app = FastAPI()
 
@@ -43,3 +44,5 @@ app.include_router(websocket_router)
 app.include_router(exam_router)
 app.include_router(dashboard_router)
 app.include_router(image_router)
+app.include_router(file_router)
+
